@@ -1,0 +1,55 @@
+. -> add dot before job's name to hide it from pipeline.
+
+image: ubuntu -> base image which will be used to run pipeline.
+
+before_script: / after_script: -> before / after script, commands lower will be executed.
+    - apt update; apt install -y gcc
+
+cache:
+   paths:
+       - "./program" -> specifes what have to be saved for other jobs, can be more paths.
+       - "./test" -> another path.
+
+stages: -> define stages in order they will be executed.
+   - syntax
+   - compile
+   - test
+   - deploy
+
+check: -> job's name.
+   image: gcc -> use image gcc for this job.
+   stage: syntax -> stage where the job belongs.
+   script: -> commands to run. 
+       - gcc -fsyntax-only program.c
+
+compiling:
+   image: gcc
+   stage: compile
+   only: -> the job will run only in listed branch.
+       - test -> branch.
+   script: ->
+       - gcc -v -o program program.c 2> gcc.log -> created in job.
+   artifacts: -> will save certain paths.
+       paths:
+           - "gcc.log" -> saving file from job.
+       expire_in: 1 week/day/hour -> set expiration.
+       when: on_failure/on_success/always -> saves artifact only when conditions are met.
+    
+testing: 
+   stage: test
+   script:
+       - bash test.sh
+
+cleaning:
+   stage: test
+   script: rm ./program
+   when: on_failure/on_success/always/manual/delayed -> when previous job fail, when previous job success, always, job is run manually by user, job is delayed by X time.
+   start_in: 30 minutes/hour/day -> only used with delayed option.
+   except: -> the job will not run in listed branch. 
+       - main -> branch.
+
+upload:
+   stage: deploy
+   script:
+       - echo "uploading app..."
+   when: manual -> need to be run manually, job will not run automatically.
