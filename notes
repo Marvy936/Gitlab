@@ -53,3 +53,96 @@ upload:
    script:
        - echo "uploading app..."
    when: manual -> need to be run manually, job will not run automatically.
+
+
+
+------------------------------
+
+
+-- NEEDS
+
+execute_A:
+    needs: [compile_A] -> will wait for the job two finish not whole stage.
+    tags: 
+        - telekom -> we tagged our runner with telekom tag, it will use that runner.
+    stage: execute
+    script:
+    - echo "Running the program..."
+    - java HelloWorld
+
+-- VARIABLES
+
+variables:
+    VAR: "hodnota"
+
+ak su variables mimo jobu vidia ich vsetky ak su v jobe vidi len dany job, cez gitlab UI stranku v settings cicd variables tam na stavim globalne predmety, cez pipelines new pipeline viem prepisovat hodnoty. 
+
+test-variable:
+    variables:
+       VAR2:"hodnota2"
+stage: test
+script:
+    - echo $VAR
+
+
+-- SSH
+
+ako cez SSH sa pripojit na stroj
+
+script:
+   - apk update ; apk add openssh-client
+   - eval $(ssh-agent -s)
+   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+   - mkdir -p ~/.ssh
+   - chmod 700 ~/.ssh
+   - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts
+   - chmod 644 ~/.ssh/known_hosts
+   - ssh $USER@$AWS_IP "date;"
+
+
+-- pages zazdiela udaje na link gitlab.io pristup sa da nastavit v settings visibility pages
+linky su v deploy a pages
+
+pages:
+image: alpine:latest
+script:
+- mkdir -p ./public
+- cp ./*.html ./public/
+artifacts:
+paths:
+- public
+except:
+- main
+
+
+-- eviroment
+
+
+
+job_branch:
+  stage: deploy
+  except:
+      - main
+  script:
+      - echo "data na $CI_ENVIRONMENT_SLUG" >> public/index.html
+  environment:
+      name: staging/$CI_COMMIT_REF_NAME
+      url: $CI_PAGES_URL
+
+
+job_master:
+  stage: deploy
+  only:
+      - main
+  when: manual
+  script:
+      - echo "data na produkcii" >> public/index.html
+  environment:
+      name: production
+      url: $CI_PAGES_URL
+
+
+
+CI_DEBUG_TRACE: "true" premenna na debug logy
+
+
