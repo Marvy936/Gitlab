@@ -182,3 +182,94 @@ Customization Variables
 
     $CI_COMMIT_REF_SLUG: URL-safe version of the branch or tag name.
     $CI_COMMIT_REF_PROTECTED: true if the branch or tag is protected, otherwise false.
+
+--- PIPELINE TRIGGER
+
+On webiste in the project go to settings/cicd/pipeline trigger tokens - you can add new token here and under tokne you have button View trigger token usage examples there you can copy what you need.
+
+EXAMPLE:
+
+curl -X POST \
+     --fail \
+     -F token=glptt-ff022b454b22faefffdf14861a30a6dba6884453 \
+     -F "ref=main" \ -> on which branch it should run. 
+     -F "variables[VAR2]=VALUE" \ -> pass variables to pipeline.
+     https://gitlab.com/api/v4/projects/64280095/trigger/pipeline
+
+--- CONTAINER REGISTRY
+
+On your project in deploy/container registry, there you can copy commands to add and login to registry.
+
+EXAMPLE:
+script: 
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t registry.gitlab.com/marvy936/lab14 . -> change this from commands on website deploy/container
+    - docker push registry.gitlab.com/marvy936/lab14 -> change this from commands on website deploy/container
+
+
+docker login registry.gitlab.com
+docker pull registry.gitlab.com/marvy936/lab14
+
+build_main:
+  image: docker
+  stage: build
+  only: 
+    - main
+  services:
+    - docker
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t registry.gitlab.com/marvy936/lab14/2_plus_3:latest ./2_plus_3/
+    - docker push registry.gitlab.com/marvy936/lab14/2_plus_3:latest
+    - docker container run registry.gitlab.com/marvy936/lab14/2_plus_3:latest
+
+build_notmain:
+  image: docker
+  stage: build
+  except: 
+    - main
+  services:
+    - docker
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t registry.gitlab.com/marvy936/lab14/3x3:latest ./3x3/
+    - docker push registry.gitlab.com/marvy936/lab14/3x3:latest
+    - docker container run registry.gitlab.com/marvy936/lab14/3x3:latest
+
+--- RELEASES
+
+On webiste Deploy/Releases/New Release
+
+or in pipeline like here:
+
+image: registry.gitlab.com/gitlab-org/release-cli:latest -> HAVE TO BE ALWAYS THIS IMAGE when you want to make a release.
+variables:
+	CI_DEBUG_TRACE: "true" -> variable to control when release is created.
+
+stages:
+ - compile
+ - storage
+ - release
+
+ios-release:
+ stage: release
+ script:
+   - echo 'iOS release job $CI_COMMIT_SHORT_SHA'
+ rules:
+   - if: $RELEASE == 'true' -> it will run only if variable is set to before run.
+ release:
+   name: 'Release iOS $CI_COMMIT_SHORT_SHA'
+   tag_name: '$CI_COMMIT_SHORT_SHA'
+   description: 'iOS release v1.0.0 $CI_COMMIT_SHORT_SHA'
+   assets:
+     links:
+       - name: 'iOS'
+         url: 'http://$CI_PAGES_URL/$CI_PROJECT_NAME/program'
+
+--- PACKAGE REGISTRY
+
+curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file {path_to_file} "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{package_name}/1.0.1/HelloWorld.class"
+
+wget --header="JOB-TOKEN: $CI_JOB_TOKEN" ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/my_package/1.0.1/HelloWorld.class
+
+$CI_API_V4_URL = https://gitlab.com/api/v4
