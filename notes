@@ -207,6 +207,12 @@ script:
     - docker push registry.gitlab.com/marvy936/lab14 -> change this from commands on website deploy/container
 
 
+export CI_REGISTRY="registry.gitlab.com"
+export CI_REGISTRY_USER="USER"
+export CI_REGISTRY_PASSWORD="PASS/TOKEN"
+
+docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
 docker login registry.gitlab.com
 docker pull registry.gitlab.com/marvy936/lab14
 
@@ -243,9 +249,6 @@ On webiste Deploy/Releases/New Release
 or in pipeline like here:
 
 image: registry.gitlab.com/gitlab-org/release-cli:latest -> HAVE TO BE ALWAYS THIS IMAGE when you want to make a release.
-variables:
-	CI_DEBUG_TRACE: "true" -> variable to control when release is created.
-
 stages:
  - compile
  - storage
@@ -273,3 +276,10 @@ curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file {path_to_file} "${CI_API_
 wget --header="JOB-TOKEN: $CI_JOB_TOKEN" ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/my_package/1.0.1/HelloWorld.class
 
 $CI_API_V4_URL = https://gitlab.com/api/v4
+
+--- REST API
+
+curl --header "PRIVATE-TOKEN: {access_token}" "https://gitlab.example.com/api/v4/projects/{project_id}/pipelines"
+
+https://docs.gitlab.com/ee/api/rest/
+
