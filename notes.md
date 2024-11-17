@@ -1,5 +1,7 @@
+```
 . -> add dot before job's name to hide it from pipeline.
-
+```
+```
 image: ubuntu -> base image which will be used to run pipeline.
 
 before_script: / after_script: -> before / after script, commands lower will be executed.
@@ -53,9 +55,9 @@ upload:
    script:
        - echo "uploading app..."
    when: manual -> need to be run manually, job will not run automatically.
-
---- GITLAB NEEDS
-
+```
+### --- GITLAB NEEDS
+```
 execute_A:
     needs: [compile_A] -> will wait for the job two finish not whole stage.
     tags: 
@@ -64,9 +66,9 @@ execute_A:
     script:
     - echo "Running the program..."
     - java HelloWorld
-
---- GITLAB SSH
-
+```
+### --- GITLAB SSH
+```
 script:
    - apk update ; apk add openssh-client
    - eval $(ssh-agent -s)
@@ -76,9 +78,9 @@ script:
    - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts -> $AWS_IP is defined in variables on website with your public IP.
    - chmod 644 ~/.ssh/known_hosts
    - ssh $USER@$AWS_IP "date;"
-
---- GITLAB PAGES
-
+```
+### --- GITLAB PAGES
+```
 Links on created pages are on the website. Deploy/Pages and you can change visibility at Settings/Visibility and there are Pages.
 
 pages:
@@ -91,9 +93,9 @@ pages:
             - public
     except:
     - main
-
---- GITLAB ENVIROMENT
-
+```
+### --- GITLAB ENVIROMENT
+```
 job_branch:
   stage: deploy
   except:
@@ -114,9 +116,9 @@ job_master:
   environment:
       name: production
       url: $CI_PAGES_URL
-
---- GITLAB VARIABLES
-
+```
+### --- GITLAB VARIABLES
+```
 GLOBAL VARIABLES -> are set on top level and can be approached by all jobs through all stages.
                    -> you can set them in yml file or on the website. Settings/CI/CD/Variables.
 JOB VARIABLES -> are set on job level and can be reached only in that job.
@@ -182,9 +184,9 @@ Customization Variables
 
     $CI_COMMIT_REF_SLUG: URL-safe version of the branch or tag name.
     $CI_COMMIT_REF_PROTECTED: true if the branch or tag is protected, otherwise false.
-
---- PIPELINE TRIGGER
-
+```
+### --- PIPELINE TRIGGER
+```
 On webiste in the project go to settings/cicd/pipeline trigger tokens - you can add new token here and under tokne you have button View trigger token usage examples there you can copy what you need.
 
 EXAMPLE:
@@ -195,9 +197,9 @@ curl -X POST \
      -F "ref=main" \ -> on which branch it should run. 
      -F "variables[VAR2]=VALUE" \ -> pass variables to pipeline.
      https://gitlab.com/api/v4/projects/64280095/trigger/pipeline
-
---- CONTAINER REGISTRY
-
+```
+### --- CONTAINER REGISTRY
+```
 On your project in deploy/container registry, there you can copy commands to add and login to registry.
 
 EXAMPLE:
@@ -241,9 +243,9 @@ build_notmain:
     - docker build -t registry.gitlab.com/marvy936/lab14/3x3:latest ./3x3/
     - docker push registry.gitlab.com/marvy936/lab14/3x3:latest
     - docker container run registry.gitlab.com/marvy936/lab14/3x3:latest
-
---- RELEASES
-
+```
+### --- RELEASES
+```
 On webiste Deploy/Releases/New Release
 
 or in pipeline like here:
@@ -268,17 +270,17 @@ ios-release:
      links:
        - name: 'iOS'
          url: 'http://$CI_PAGES_URL/$CI_PROJECT_NAME/program'
-
---- PACKAGE REGISTRY
-
+```
+### --- PACKAGE REGISTRY
+```
 curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file {path_to_file} "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{package_name}/1.0.1/HelloWorld.class"
 
 wget --header="JOB-TOKEN: $CI_JOB_TOKEN" ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/my_package/1.0.1/HelloWorld.class
 
 $CI_API_V4_URL = https://gitlab.com/api/v4
-
---- REST API
-
+```
+### --- REST API
+```
 curl --header "PRIVATE-TOKEN: {access_token}" "https://gitlab.example.com/api/v4/projects/{project_id}/pipelines"
 
 https://docs.gitlab.com/ee/api/rest/
