@@ -141,7 +141,8 @@ To set up a pipeline trigger in GitLab, follow these steps:
     Navigate to your project in GitLab.
     Go to Settings > CI/CD > Pipeline Triggers.
     Add a new token by clicking Add trigger.
-    A unique token will be generated. Beneath the token, you’ll see a button labeled View trigger token usage examples. This provides a pre-built curl command for triggering pipelines.
+    A unique token will be generated. Beneath the token, you’ll see a button 
+    labeled View trigger token usage examples. This provides a pre-built curl command for triggering pipelines.
     
 ```bash
 curl -X POST \
