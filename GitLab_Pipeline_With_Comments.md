@@ -1,7 +1,5 @@
 
-# GitLab Pipeline with Detailed Comments
-
-## Original Pipeline
+# GitLab Pipeline
 
 ```yaml
 # Base image to use in all jobs unless overridden in specific jobs.
