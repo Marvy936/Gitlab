@@ -3,11 +3,12 @@
 ## Table of Contents
 
 1. [Gitlab Pipeline](#gitlab-pipeline)
-2. [GitLab Needs](#gitlab-needs)
-3. [GitLab SSH](#gitlab-ssh)
-4. [GitLab Pages](#gitlab-pages)
-5. [GitLab Environments](#gitlab-environments)
-6. [GitLab Variables](#gitlab-variables)
+2. [Additional Notes](#additional_notes)
+3. [GitLab Needs](#gitlab-needs)
+4. [GitLab SSH](#gitlab-ssh)
+5. [GitLab Pages](#gitlab-pages)
+6. [GitLab Environments](#gitlab-environments)
+7. [GitLab Variables](#gitlab-variables)
    - [General Pipeline and Job Variables](#general-pipeline-and-job-variables)
    - [Project and Repository Variables](#project-and-repository-variables)
    - [Environment and Deployment Variables](#environment-and-deployment-variables)
@@ -15,11 +16,11 @@
    - [GitLab Pages Specific Variables](#gitlab-pages-specific-variables)
    - [Debugging and Logging Variables](#debugging-and-logging-variables)
    - [Customization Variables](#customization-variables)
-7. [Pipeline Trigger](#pipeline-trigger)
-8. [Container Registry](#container-registry)
-9. [Releases](#releases)
-10. [Package Registry](#package-registry)
-11. [REST API](#rest-api)
+8. [Pipeline Trigger](#pipeline-trigger)
+9. [Container Registry](#container-registry)
+10. [Releases](#releases)
+11. [Package Registry](#package-registry)
+12. [REST API](#rest-api)
 
 ---
 
@@ -100,6 +101,16 @@ upload:
     - echo "uploading app..."
   when: manual         # Requires manual trigger to execute.
 ```
+
+---
+
+## Additional Notes
+
+### Hidden Jobs
+```yaml
+. -> add dot before job's name to hide it from pipeline.
+```
+- Jobs starting with a `.` are hidden by default and won’t appear in the pipeline view. These can still be referenced by other jobs (e.g., via `extends`).
 
 ---
 
