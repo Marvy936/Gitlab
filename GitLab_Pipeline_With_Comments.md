@@ -95,14 +95,21 @@ Environments in GitLab allow the specification of deployment targets like stagin
 
 ```yaml
 job_branch:
-  stage: deploy
-  except:
-    - main
+  stage: deploy                    # Assign this job to the "deploy" stage.
+  except:                          
+    - main                         # Exclude the "main" branch; this job won't run on it.
   script:
+    # This script is executed as part of the deployment process for the staging environment.
     - echo "Deploying to staging environment"
-  environment:
+  environment:                     # Define the environment details for this deployment.
     name: staging/$CI_COMMIT_REF_NAME
     url: $CI_PAGES_URL
+
+    # 'name' specifies the environment. The use of $CI_COMMIT_REF_NAME ensures
+    # that each branch has its own staging environment (e.g., 'staging/feature-branch').
+    
+    # 'url' specifies the URL associated with this environment.
+    # $CI_PAGES_URL is a built-in GitLab variable that provides the GitLab Pages URL for the project.
 ```
 
 ---
