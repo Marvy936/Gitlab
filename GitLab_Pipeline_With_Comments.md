@@ -135,6 +135,14 @@ test-variable:
 ---
 
 ### Pipeline Trigger
+
+To set up a pipeline trigger in GitLab, follow these steps:
+
+    Navigate to your project in GitLab.
+    Go to Settings > CI/CD > Pipeline Triggers.
+    Add a new token by clicking Add trigger.
+    A unique token will be generated. Beneath the token, you’ll see a button labeled View trigger token usage examples. This provides a pre-built curl command for triggering pipelines.
+    
 ```bash
 curl -X POST \
      --fail \
@@ -143,9 +151,17 @@ curl -X POST \
      -F "variables[VAR2]=VALUE" \ # Pass variables to the pipeline.
      https://gitlab.com/api/v4/projects/64280095/trigger/pipeline
 ```
-- **Trigger Token**: Unique token created under *Settings > CI/CD > Pipeline triggers*.
-- **Branch**: Use the `ref` parameter to specify the branch.
-- **Custom Variables**: Pass additional data using the `variables[]` field.
+
+What does each part do?
+
+    -X POST: Sends a POST request to trigger the pipeline.
+    --fail: Ensures the script fails if the trigger is unsuccessful.
+    -F token=<your-token>: Includes the unique trigger token.
+    -F "ref=<branch>": Specifies the branch or tag to build.
+    -F "variables[<variable-name>]=<value>": Injects custom variables into the pipeline.
+    <GitLab API URL>: The endpoint to which the POST request is sent.
+
+Using this setup, you can programmatically start your pipelines and customize their behavior with variables. Let me know if you'd like detailed comments added to another section!
 
 ---
 
