@@ -182,6 +182,26 @@ script:
   - `$CI_REGISTRY_USER`: Username for the registry.
   - `$CI_REGISTRY_PASSWORD`: Password/token for authentication.
 
+Store sensitive information like CI_REGISTRY_USER and CI_REGISTRY_PASSWORD in GitLab’s CI/CD Variables. To set this up:
+
+    Go to your project in GitLab.
+    Navigate to Settings > CI/CD > Variables.
+    Add your variables:
+        CI_REGISTRY
+        CI_REGISTRY_USER
+        CI_REGISTRY_PASSWORD
+
+These variables will automatically be available in your pipeline jobs and are securely masked in logs.
+Or you can EXPORT them in script:
+
+```
+script:
+  - export CI_REGISTRY="registry.gitlab.com"
+  - export CI_REGISTRY_USER="USER"
+  - export CI_REGISTRY_PASSWORD="PASS/TOKEN"
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+```
+
 ---
 
 ### Releases
