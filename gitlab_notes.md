@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-1. [Basic Job Configuration](#basic-job-configuration)
+1. [Basic Job Configuration](#gitlab-pipeline)
 2. [GitLab Needs](#gitlab-needs)
 3. [GitLab SSH](#gitlab-ssh)
 4. [GitLab Pages](#gitlab-pages)
@@ -23,8 +23,7 @@
 
 ---
 
-# GitLab Pipeline
-
+## GitLab Pipeline
 ```yaml
 # Base image to use in all jobs unless overridden in specific jobs.
 image: ubuntu 
