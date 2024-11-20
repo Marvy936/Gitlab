@@ -359,3 +359,18 @@ ios-release:
 - **Purpose**: Automates creating a GitLab release.
 - **Tag Name**: Each release requires a unique Git tag.
 - **Assets**: Links associated with the release, such as build artifacts or documentation.
+
+---
+
+### REST API Pipeline Trigger
+Programmatically start pipelines and pass variables using the REST API.
+
+#### Example Trigger
+1. Navigate to **Settings > CI/CD > Pipeline triggers** in your GitLab project.
+2. Add a new trigger and use the generated token.
+
+```bash
+curl -X POST      --fail      -F token=YOUR_TRIGGER_TOKEN      -F "ref=main"      -F "variables[MY_VAR]=my_value"      https://gitlab.com/api/v4/projects/YOUR_PROJECT_ID/trigger/pipeline
+```
+
+---
