@@ -1,4 +1,3 @@
-
 # GitLab CI/CD Notes
 
 ## General Notes
@@ -6,6 +5,7 @@
 - **`. ->`** Add a dot before a job's name to hide it from the pipeline.
 - **`image: ubuntu`** Specifies the base image used to run the pipeline.
 - **`before_script:` / `after_script:`** Defines commands to execute before or after the main script.
+  
     ```yaml
     before_script:
       - apt update; apt install -y gcc
@@ -114,7 +114,8 @@ execute_A:
 script:
   - apk update; apk add openssh-client
   - eval $(ssh-agent -s)
-  - echo "$SSH_PRIVATE_KEY" | tr -d '' | ssh-add - > /dev/null
+  - echo "$SSH_PRIVATE_KEY" | tr -d '
+' | ssh-add - > /dev/null
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
   - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts
