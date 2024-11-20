@@ -189,6 +189,57 @@ test-variable:
   - `$CI_PIPELINE_ID`: Unique pipeline ID.
   - `$CI_JOB_NAME`: Name of the current job.
 
+### Full List of Built-In Variables
+
+General Pipeline and Job Variables
+
+    $CI_PIPELINE_ID: Unique ID of the pipeline.
+    $CI_JOB_ID: Unique ID of the job.
+    $CI_JOB_NAME: Name of the job.
+    $CI_JOB_STAGE: Stage of the current job.
+    $CI_JOB_STATUS: Status of the current job (e.g., success, failed).
+    $CI_COMMIT_SHA: SHA hash of the commit being built.
+    $CI_COMMIT_SHORT_SHA: Shortened version of the commit SHA.
+    $CI_COMMIT_REF_NAME: Branch or tag name for the commit.
+    $CI_COMMIT_MESSAGE: Full commit message.
+
+Project and Repository Variables
+
+    $CI_PROJECT_ID: Unique ID of the project.
+    $CI_PROJECT_NAME: Name of the project.
+    $CI_PROJECT_PATH: Path to the project, including namespace (e.g., username/project-name).
+    $CI_PROJECT_NAMESPACE: Namespace or group containing the project.
+    $CI_PROJECT_URL: URL to the GitLab project.
+    $CI_REPOSITORY_URL: URL to the Git repository.
+
+Environment and Deployment Variables
+
+    $CI_ENVIRONMENT_NAME: Name of the environment defined in the .gitlab-ci.yml file.
+    $CI_ENVIRONMENT_SLUG: URL-safe version of the environment name.
+    $CI_ENVIRONMENT_URL: URL of the environment (useful for GitLab Pages).
+    $CI_ENVIRONMENT_ACTION: The action to be performed on the environment (start, stop, or prepare).
+
+User and Runner Information
+
+    $CI_RUNNER_ID: ID of the GitLab Runner used for the job.
+    $CI_RUNNER_DESCRIPTION: Description of the GitLab Runner.
+    $CI_RUNNER_TAGS: Tags associated with the GitLab Runner.
+    $GITLAB_USER_EMAIL: Email of the GitLab user who triggered the pipeline.
+    $GITLAB_USER_LOGIN: Username of the GitLab user who triggered the pipeline.
+
+GitLab Pages Specific Variables
+
+    $CI_PAGES_URL: URL of the GitLab Pages site (e.g., https://namespace.gitlab.io/project).
+
+Debugging and Logging Variables
+
+    $CI_DEBUG_TRACE: If set to true, enables debug logging for the job.
+    $CI_SERVER_NAME: Name of the GitLab instance.
+
+Customization Variables
+
+    $CI_COMMIT_REF_SLUG: URL-safe version of the branch or tag name.
+    $CI_COMMIT_REF_PROTECTED: true if the branch or tag is protected, otherwise false.
 ---
 
 ### Pipeline Trigger
