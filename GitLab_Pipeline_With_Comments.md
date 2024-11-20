@@ -2,16 +2,19 @@
 
 ## Table of Contents
 
-1. [Gitlab Pipeline](#gitlab-pipeline)
+1. [GitLab Pipeline](#gitlab-pipeline)
 2. [Additional Notes](#additional-notes)
-3. [Docker Container Manipulation](#docker-container-manipulation)
-4. [Docker Logs, Inspect, and Stats](#docker-logs-inspect-and-stats)
-5. [Docker Volumes](#docker-volumes)
-6. [Docker Networks](#docker-networks)
-7. [Docker Images](#docker-images)
-8. [Dockerfile](#dockerfile)
-9. [Docker Context](#docker-context)
-10. [Docker Compose](#docker-compose)
+    - [Hidden Jobs](#hidden-jobs)
+3. [Environments](#environments)
+4. [SSH Setup in GitLab](#ssh-setup-in-gitlab)
+5. [Using the `needs` Keyword](#using-the-needs-keyword)
+6. [GitLab Pages Configuration](#gitlab-pages-configuration)
+7. [Variables](#variables)
+    - [Full List of Built-In Variables](#full-list-of-built-in-variables)
+8. [Pipeline Trigger](#pipeline-trigger)
+9. [Container Registry](#container-registry)
+10. [Releases](#releases)
+11. [Package Registry](#package-registry)
 
 ---
 
@@ -106,7 +109,7 @@ upload:
 
 ---
 
-### Environments
+# Environments
 Environments in GitLab allow the specification of deployment targets like staging and production.
 
 ```yaml
@@ -130,7 +133,7 @@ job_branch:
 
 ---
 
-### SSH Setup in GitLab
+# SSH Setup in GitLab
 SSH setup allows secure remote access during CI/CD jobs.
 
 ```yaml
@@ -163,7 +166,7 @@ Key Points:
         Running deployment scripts on a remote server.
 ---
 
-### Using the `needs` Keyword
+# Using the `needs` Keyword
 The `needs` keyword defines specific dependencies between jobs.
 
 ```yaml
@@ -188,7 +191,7 @@ Key Points:
         
 ---
 
-### GitLab Pages Configuration
+# GitLab Pages Configuration
 ```yaml
 pages:
   image: alpine:latest        # Lightweight image for Pages jobs.
@@ -209,7 +212,7 @@ pages:
 
 ---
 
-### Variables
+# Variables
 ```yaml
 variables:
   VAR: "value"               # Example of a global variable.
@@ -230,7 +233,7 @@ test-variable:
   - `$CI_PIPELINE_ID`: Unique pipeline ID.
   - `$CI_JOB_NAME`: Name of the current job.
 
-### Full List of Built-In Variables
+# Full List of Built-In Variables
 
 General Pipeline and Job Variables
 
@@ -283,7 +286,7 @@ Customization Variables
     $CI_COMMIT_REF_PROTECTED: true if the branch or tag is protected, otherwise false.
 ---
 
-### Pipeline Trigger
+# Pipeline Trigger
 
 To set up a pipeline trigger in GitLab, follow these steps:
 
@@ -315,7 +318,7 @@ Using this setup, you can programmatically start your pipelines and customize th
 
 ---
 
-### Container Registry
+# Container Registry
 ```yaml
 script: 
   # Authenticate with the GitLab Container Registry.
@@ -353,7 +356,7 @@ script:
 
 ---
 
-### Releases
+# Releases
 ```yaml
 ios-release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest  # Required release image.
@@ -378,7 +381,7 @@ ios-release:
 
 ---
 
-### Package Registry
+# Package Registry
 ```bash
 curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file {path_to_file} "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{package_name}/1.0.1/HelloWorld.class"
 
