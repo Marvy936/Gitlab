@@ -23,43 +23,83 @@
 
 ---
 
-## Basic Job Configuration
+# GitLab Pipeline
 
-- **Hide a Job**: Add a `.` before the job's name to hide it from the pipeline.
-- **Image**: Base image used for the pipeline.
-  ```yaml
-  image: ubuntu
-  ```
-- **Before/After Scripts**: Commands to run before or after the job.
-  ```yaml
-  before_script:
-    - apt update; apt install -y gcc
-  after_script:
-    - echo "Cleanup done"
-  ```
-- **Cache**: Specify paths to cache for other jobs.
-  ```yaml
-  cache:
-    paths:
-      - "./program"
-      - "./test"
-  ```
-- **Stages**: Define stages in the pipeline in order of execution.
-  ```yaml
-  stages:
-    - syntax
-    - compile
-    - test
-    - deploy
-  ```
-
-### Example Job Configuration
 ```yaml
-check:
-  image: gcc
-  stage: syntax
-  script:
+# Base image to use in all jobs unless overridden in specific jobs.
+image: ubuntu 
+
+# Commands to run before each job's main script section.
+before_script: 
+  # Updates package lists and installs gcc in the job container.
+  - apt update 
+  - apt install -y gcc
+
+# Caches files or directories between pipeline runs.
+cache:
+  paths:
+    # Example paths to cache. Cached files can be reused by other jobs.
+    - "./program"
+    - "./test"
+
+# Defines the sequence of stages in the pipeline and their execution order.
+stages: 
+  - syntax     # First stage: Syntax checks.
+  - compile    # Second stage: Compilation.
+  - test       # Third stage: Testing.
+  - deploy     # Fourth stage: Deployment.
+
+# Example syntax check job.
+check: 
+  # Specific base image for this job (overrides the global image).
+  image: gcc 
+  # Associates the job with the "syntax" stage.
+  stage: syntax 
+  # Commands to execute for this job.
+  script: 
+    # Perform a syntax-only check on program.c using GCC.
     - gcc -fsyntax-only program.c
+
+# Example compile job.
+compiling:
+  image: gcc           # Use GCC image for this job.
+  stage: compile       # This job belongs to the "compile" stage.
+  only:                # This job will only run on the "test" branch.
+    - test
+  script:
+    # Compile the program and redirect errors to gcc.log.
+    - gcc -v -o program program.c 2> gcc.log 
+  artifacts:           # Saves the gcc.log file as an artifact.
+    paths:
+      - "gcc.log"      # File path to save as an artifact.
+    expire_in: 1 week  # Artifacts will be stored for one week.
+    when: on_failure   # Save artifacts only if the job fails.
+
+# Example testing job.
+testing: 
+  stage: test          # This job belongs to the "test" stage.
+  script:
+    # Runs a test script named test.sh.
+    - bash test.sh
+
+# Cleanup task after testing.
+cleaning:
+  stage: test          # Part of the "test" stage.
+  script:
+    # Removes the program binary after testing.
+    - rm ./program
+  when: on_failure     # Runs only if the previous job fails.
+  except: 
+    # Skip this job on the main branch.
+    - main
+
+# Example deployment job.
+upload:
+  stage: deploy        # This job belongs to the "deploy" stage.
+  script:
+    # Outputs a message to indicate deployment.
+    - echo "uploading app..."
+  when: manual         # Requires manual trigger to execute.
 ```
 
 ---
