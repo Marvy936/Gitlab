@@ -119,16 +119,33 @@ SSH setup allows secure remote access during CI/CD jobs.
 
 ```yaml
 script:
-  - apk update; apk add openssh-client
-  - eval $(ssh-agent -s)
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
-  - ssh $USER@$AWS_IP "date;"
+  - apk update; apk add openssh-client          # Installs the SSH client on the job's container.
+  - eval $(ssh-agent -s)                        # Starts the SSH agent for managing keys.
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\\r' | ssh-add - > /dev/null
+    # Adds the private key to the SSH agent. The `$SSH_PRIVATE_KEY` is a variable
+    # that must be set in **Settings > CI/CD > Variables**.
+    # `tr -d '\\r'` ensures compatibility with UNIX line endings.
+  - mkdir -p ~/.ssh                             # Creates the SSH configuration directory if it doesn't exist.
+  - chmod 700 ~/.ssh                            # Secures the `.ssh` directory.
+  - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts   # Adds the remote server's public key to the known_hosts file.
+    # This prevents "unknown host" errors during SSH connections.
+    # `$AWS_IP` should be defined in your CI/CD variables.
+  - chmod 644 ~/.ssh/known_hosts                # Adjusts permissions for the known_hosts file.
+  - ssh $USER@$AWS_IP "date;"                   # Tests the connection by running the `date` command on the remote server.
 ```
+Key Points:
 
+    Environment Variables:
+        $SSH_PRIVATE_KEY: The private SSH key for authentication. Add this as a protected variable in your GitLab project.
+        $AWS_IP: The remote server's IP address. Add this as a variable in Settings > CI/CD > Variables.
+
+    Security Best Practices:
+        Use protected and masked variables for sensitive data like SSH keys.
+        Ensure the private key has the correct permissions (chmod 600).
+
+    Common Use Cases:
+        Deploying files to a server using scp.
+        Running deployment scripts on a remote server.
 ---
 
 ### Using the `needs` Keyword
@@ -136,15 +153,24 @@ The `needs` keyword defines specific dependencies between jobs.
 
 ```yaml
 execute_A:
-  needs: [compile_A]
+  needs: [compile_A]                    # Specifies that this job depends on the "compile_A" job.
   tags:
-    - telekom
-  stage: execute
+    - telekom                           # Uses a runner tagged with "telekom".
+  stage: execute                        # Assigns this job to the "execute" stage.
   script:
-    - echo "Running the program..."
-    - java HelloWorld
+    - echo "Running the program..."     # Prints a message to indicate execution.
+    - java HelloWorld                   # Runs the HelloWorld program.
 ```
+Key Points:
 
+    Parallel Execution:
+        Jobs with needs can run in parallel with other jobs as long as their dependencies are met.
+        This speeds up pipelines by avoiding stage-level waiting.
+
+    Syntax:
+        needs: [job_name]: Lists the job(s) this job depends on.
+        Dependencies can span across different stages.
+        
 ---
 
 ### GitLab Pages Configuration
