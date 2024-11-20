@@ -90,6 +90,56 @@ upload:
 
 ---
 
+### Environments
+Environments in GitLab allow the specification of deployment targets like staging and production.
+
+```yaml
+job_branch:
+  stage: deploy
+  except:
+    - main
+  script:
+    - echo "Deploying to staging environment"
+  environment:
+    name: staging/$CI_COMMIT_REF_NAME
+    url: $CI_PAGES_URL
+```
+
+---
+
+### SSH Setup in GitLab
+SSH setup allows secure remote access during CI/CD jobs.
+
+```yaml
+script:
+  - apk update; apk add openssh-client
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  - ssh $USER@$AWS_IP "date;"
+```
+
+---
+
+### Using the `needs` Keyword
+The `needs` keyword defines specific dependencies between jobs.
+
+```yaml
+execute_A:
+  needs: [compile_A]
+  tags:
+    - telekom
+  stage: execute
+  script:
+    - echo "Running the program..."
+    - java HelloWorld
+```
+
+---
+
 ### GitLab Pages Configuration
 ```yaml
 pages:
