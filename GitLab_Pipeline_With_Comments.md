@@ -362,15 +362,11 @@ ios-release:
 
 ---
 
-### REST API Pipeline Trigger
-Programmatically start pipelines and pass variables using the REST API.
-
-#### Example Trigger
-1. Navigate to **Settings > CI/CD > Pipeline triggers** in your GitLab project.
-2. Add a new trigger and use the generated token.
-
+### Package Registry
 ```bash
-curl -X POST      --fail      -F token=YOUR_TRIGGER_TOKEN      -F "ref=main"      -F "variables[MY_VAR]=my_value"      https://gitlab.com/api/v4/projects/YOUR_PROJECT_ID/trigger/pipeline
-```
+curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file {path_to_file} "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/{package_name}/1.0.1/HelloWorld.class"
 
----
+wget --header="JOB-TOKEN: $CI_JOB_TOKEN" ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/my_package/1.0.1/HelloWorld.class
+
+$CI_API_V4_URL = https://gitlab.com/api/v4
+```
