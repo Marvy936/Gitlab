@@ -3,7 +3,7 @@
 ## Table of Contents
 
 1. [Gitlab Pipeline](#gitlab-pipeline)
-2. [Additional Notes](##additional-notes)
+2. [Additional Notes](#additional-notes)
 3. [Docker Container Manipulation](#docker-container-manipulation)
 4. [Docker Logs, Inspect, and Stats](#docker-logs-inspect-and-stats)
 5. [Docker Volumes](#docker-volumes)
@@ -96,7 +96,7 @@ upload:
 
 ---
 
-## Additional Notes
+# Additional Notes
 
 ### Hidden Jobs
 ```yaml
