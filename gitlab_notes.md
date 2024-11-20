@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-1. [Basic Job Configuration](#gitlab-pipeline)
+1. [Gitlab Pipeline](#gitlab-pipeline)
 2. [GitLab Needs](#gitlab-needs)
 3. [GitLab SSH](#gitlab-ssh)
 4. [GitLab Pages](#gitlab-pages)
