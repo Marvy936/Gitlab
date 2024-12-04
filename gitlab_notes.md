@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-1. [GitLab Pipeline `.gitlab-ci.yml`](#gitlab-pipeline-.gitlab-ci.-yml)
+1. [GitLab Pipeline `.gitlab-ci.yml`](#gitlab-pipeline-gitlab-ciyml)
 2. [Additional Notes](#additional-notes)
     - [Hidden Jobs](#hidden-jobs)
 3. [Environments](#environments)
