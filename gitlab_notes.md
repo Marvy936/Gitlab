@@ -138,18 +138,18 @@ SSH setup allows secure remote access during CI/CD jobs.
 
 ```yaml
 script:
-  - apk update; apk add openssh-client                            # Installs the SSH client on the job's container.
-  - eval $(ssh-agent -s)                                          # Starts the SSH agent for managing keys.
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\\r' | ssh-add - > /dev/null # Adds the private key to the SSH agent. The `$SSH_PRIVATE_KEY` is a variable
-                                                                  # that must be set in **Settings > CI/CD > Variables**.
-                                                                  # `tr -d '\\r'` ensures compatibility with UNIX line endings.
-  - mkdir -p ~/.ssh                                               # Creates the SSH configuration directory if it doesn't exist.
-  - chmod 700 ~/.ssh                                              # Secures the `.ssh` directory.
-  - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts                     # Adds the remote server's public key to the known_hosts file.
-                                                                  # This prevents "unknown host" errors during SSH connections.
-                                                                  # `$AWS_IP` should be defined in your CI/CD variables.
-  - chmod 644 ~/.ssh/known_hosts                                  # Adjusts permissions for the known_hosts file.
-  - ssh $USER@$AWS_IP "date;"                                     # Tests the connection by running the `date` command on the remote server.
+  - apk update; apk add openssh-client                                # Installs the SSH client on the job's container.
+  - eval $(ssh-agent -s)                                              # Starts the SSH agent for managing keys.
+  - echo "$SSH_PRIVATE_KEY" | sed 's/\r$//' | ssh-add - > /dev/null   # Adds the private key to the SSH agent. The `$SSH_PRIVATE_KEY` is a variable
+                                                                      # that must be set in **Settings > CI/CD > Variables**.
+                                                                      #  sed 's/\r$//' ensures compatibility with UNIX line endings.
+  - mkdir -p ~/.ssh                                                   # Creates the SSH configuration directory if it doesn't exist.
+  - chmod 700 ~/.ssh                                                  # Secures the `.ssh` directory.
+  - ssh-keyscan $AWS_IP >> ~/.ssh/known_hosts                         # Adds the remote server's public key to the known_hosts file.
+                                                                      # This prevents "unknown host" errors during SSH connections.
+                                                                      # `$AWS_IP` should be defined in your CI/CD variables.
+  - chmod 644 ~/.ssh/known_hosts                                      # Adjusts permissions for the known_hosts file.
+  - ssh $USER@$AWS_IP "date;"                                         # Tests the connection by running the `date` command on the remote server.
 ```
 Key Points:
 
