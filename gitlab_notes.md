@@ -389,3 +389,52 @@ wget --header="JOB-TOKEN: $CI_JOB_TOKEN" ${CI_API_V4_URL}/projects/${CI_PROJECT_
 
 $CI_API_V4_URL = https://gitlab.com/api/v4
 ```
+```yaml
+variables:
+  version: "1.0"
+  DEPLOY_SERVER: 10.10.10.10
+  DEPLOY_PATH: /etc/app
+
+image: openjdk:11
+
+stages:
+  - Compile
+  - Test
+  - Package
+  - Deploy
+
+compile:
+  # tags:
+  #   - java-runner
+  stage: Compile
+  script:
+    - if [ -f HelloWorld.java ]; then javac HelloWorld.java; else echo "No HelloWorld.java file."; exit 1; fi
+  artifacts:
+    paths:
+      - HelloWorld.class
+
+test:
+  # tags:
+  #   - java-runner
+  stage: Test
+  script:
+    - java HelloWorld
+
+package:
+  # tags:
+  #   - java-runner
+  stage: Package
+  script:
+    - jar cvf HelloWorld_v$version-$CI_JOB_ID.jar .
+  artifacts:
+    paths:
+      - HelloWorld_v$version-$CI_JOB_ID.jar
+
+deploy:
+  # tags:
+  #   - java-runner
+  stage: Deploy
+  script:
+    - scp HelloWorld_v$version-$CI_JOB_ID.jar ubuntu@$DEPLOY_SERVER:$DEPLOY_PATH
+  when: manual
+```
